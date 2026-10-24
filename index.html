@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CartCraft | Shopping Calculator</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+
+        <h1>🛒 CartCraft</h1>
+        <p>Your personal shopping calculator.</p>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <!-- Add a product -->
+        <h2>Add Product</h2>
+
+        <form method="POST">
+            <input type="hidden" name="action" value="add_product">
+
+            <label for="name">Product name</label>
+            <input id="name" type="text" name="name"
+                   placeholder="e.g. Watch" required>
+
+            <label for="price">Price (₹)</label>
+            <input id="price" type="number" name="price"
+                   min="0.01" step="0.01"
+                   placeholder="Enter price" required>
+
+            <label for="quantity">Quantity</label>
+            <input id="quantity" type="number" name="quantity"
+                   min="0.01" step="0.01"
+                   placeholder="Enter quantity" required>
+
+            <button type="submit">＋ Add Product</button>
+        </form>
+
+        <!-- Shopping cart -->
+        <h2>Your Cart</h2>
+
+        {% if cart %}
+            {% for item in cart %}
+                <div class="product-card">
+                    <p><strong>{{ item.name }}</strong></p>
+                    <p>Price: ₹{{ "%.2f"|format(item.price) }}</p>
+                    <p>Quantity: {{ item.quantity }}</p>
+                    <p>Subtotal: ₹{{ "%.2f"|format(item.price * item.quantity) }}</p>
+
+                    <form method="POST">
+                        <input type="hidden" name="action"
+                               value="remove_product">
+                        <input type="hidden" name="index"
+                               value="{{ loop.index0 }}">
+                        <button type="submit">Remove Product</button>
+                    </form>
+                </div>
+            {% endfor %}
+
+            <p class="total">
+                Running Total: ₹{{ "%.2f"|format(running_total) }}
+            </p>
+
+            <!-- Calculate bill -->
+            <h2>Checkout</h2>
+
+            <form method="POST">
+                <input type="hidden" name="action" value="calculate">
+
+                <label for="discount">Discount (%)</label>
+                <input id="discount" type="number" name="discount"
+                       min="0" max="100" step="0.01"
+                       value="{{ discount }}" required>
+
+                <button type="submit">Calculate Bill</button>
+            </form>
+
+        {% else %}
+            <p>Your cart is empty. Add your first product above!</p>
+        {% endif %}
+
+        <!-- Final bill -->
+        {% if result %}
+            <div class="receipt">
+                <h2>🧾 Shopping Bill</h2>
+
+                {% for item in result.products %}
+                    <p>
+                        {{ item.name }} —
+                        ₹{{ "%.2f"|format(item.price) }}
+                        × {{ item.quantity }} =
+                        ₹{{ "%.2f"|format(item.subtotal) }}
+                    </p>
+                {% endfor %}
+
+                <hr>
+
+                <p>
+                    Total before discount:
+                    ₹{{ "%.2f"|format(result.total) }}
+                </p>
+
+                <p>
+                    Discount ({{ result.discount }}%):
+                    −₹{{ "%.2f"|format(result.discount_amount) }}
+                </p>
+
+                <h3 class="total">
+                    Final Bill:
+                    ₹{{ "%.2f"|format(result.final_bill) }}
+                </h3>
+
+                <!-- Membership is asked after calculating -->
+                {% if result.membership_eligible %}
+
+                    {% if member_answer is none %}
+                        <h2>🎁 Membership Offer</h2>
+                        <p>Your bill qualifies for our membership offer!</p>
+
+                        <form method="POST">
+                            <input type="hidden" name="action"
+                                   value="membership">
+
+                            <label for="is_member">
+                                Are you a member?
+                            </label>
+                            <select id="is_member" name="is_member">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+
+                            <label for="gift">Choose your gift</label>
+                            <select id="gift" name="gift">
+                                <option value="">Choose a gift</option>
+                                <option value="watch">Watch</option>
+                                <option value="scent">Scent</option>
+                            </select>
+
+                            <button type="submit">
+                                Confirm Membership
+                            </button>
+                        </form>
+
+                    {% elif result.offer_unlocked %}
+                        <h2>🎉 Membership Offer Unlocked!</h2>
+
+                        {% if result.gift %}
+                            <p>
+                                Congratulations! Your free gift is:
+                                <strong>{{ result.gift|title }}</strong>
+                            </p>
+                        {% else %}
+                            <p>You are eligible for a free watch or scent.</p>
+                        {% endif %}
+
+                    {% else %}
+                        <p>Membership offer not activated.</p>
+                    {% endif %}
+
+                {% else %}
+                    <p>
+                        The membership gift offer requires a final
+                        bill of at least ₹1,000.
+                    </p>
+                {% endif %}
+
+                <p>Thank you for shopping with CartCraft! 💙</p>
+            </div>
+        {% endif %}
+
+    </div>
+</body>
+</html>
+

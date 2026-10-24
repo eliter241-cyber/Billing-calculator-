@@ -1,0 +1,124 @@
+
+/* 1. Basic page setup */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 24px 14px;
+    font-family: Arial, sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+/* 2. Main shopping card */
+.container {
+    max-width: 650px;
+    margin: 20px auto;
+    padding: 26px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+}
+
+/* 3. Headings */
+h1 {
+    margin-top: 0;
+    color: #2563eb;
+    text-align: center;
+}
+
+h2 {
+    margin-top: 26px;
+    font-size: 20px;
+}
+
+/* 4. Form fields */
+label {
+    display: block;
+    margin: 14px 0 6px;
+    font-weight: bold;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 16px;
+    background: white;
+}
+
+input:focus,
+select:focus {
+    outline: 2px solid #93c5fd;
+    border-color: #2563eb;
+}
+
+/* 5. Buttons */
+button {
+    width: 100%;
+    margin-top: 14px;
+    padding: 13px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+/* 6. Product and receipt sections */
+.product-card,
+.receipt {
+    margin-top: 16px;
+    padding: 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #f8fafc;
+}
+
+.receipt {
+    border-top: 4px solid #16a34a;
+}
+
+.total {
+    font-size: 20px;
+    font-weight: bold;
+    color: #15803d;
+}
+
+/* 7. Errors and small text */
+.error {
+    padding: 12px;
+    border-radius: 8px;
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+p {
+    line-height: 1.6;
+}
+
+/* 8. Mobile layout */
+@media (max-width: 480px) {
+    body {
+        padding: 12px 8px;
+    }
+
+    .container {
+        margin: 8px auto;
+        padding: 18px;
+    }
+
+    h1 {
+        font-size: 25px;
+    }
+}
